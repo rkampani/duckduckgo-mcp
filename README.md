@@ -61,4 +61,3 @@ This software uses an unofficial DuckDuckGo scraping library which **violates Du
 
 ## License
 
-MIT License - For educational purposes only. Does not grant rights to violate third-party Terms of Service.
