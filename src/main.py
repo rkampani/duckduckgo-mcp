@@ -57,6 +57,8 @@ async def main() -> None:
 
             # Extract configuration
             mode = actor_input.get("mode", "stdio")
+            host = actor_input.get("host", "0.0.0.0")
+            port = actor_input.get("port", 3000)
             search_rate_limit = actor_input.get("searchRateLimit", 30)
             fetch_rate_limit = actor_input.get("fetchRateLimit", 20)
             max_results_default = actor_input.get("maxResultsDefault", 10)
@@ -70,21 +72,16 @@ async def main() -> None:
                 )
 
             try:
-                if mode == "stdio":
-                    # Run MCP server in stdio mode
-                    await run_server(
-                        search_rate_limit=search_rate_limit,
-                        fetch_rate_limit=fetch_rate_limit,
-                        max_results_default=max_results_default,
-                        safe_mode_default=safe_mode_default,
-                    )
-                elif mode == "http":
-                    # HTTP mode not yet implemented
-                    logger.error("HTTP mode not yet implemented")
-                    raise NotImplementedError("HTTP mode is not yet implemented")
-                else:
-                    logger.error("Invalid mode specified", mode=mode)
-                    raise ValueError(f"Invalid mode: {mode}. Must be 'stdio' or 'http'")
+                # Run MCP server in specified mode
+                await run_server(
+                    mode=mode,
+                    host=host,
+                    port=port,
+                    search_rate_limit=search_rate_limit,
+                    fetch_rate_limit=fetch_rate_limit,
+                    max_results_default=max_results_default,
+                    safe_mode_default=safe_mode_default,
+                )
 
             except KeyboardInterrupt:
                 pass

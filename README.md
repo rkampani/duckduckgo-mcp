@@ -82,7 +82,9 @@ pip install -r requirements.txt
 python python run_mcp_server.py
 ```
 
-### Using with Claude Desktop
+### Using with Claude Desktop (Local Mode)
+
+The server runs in **stdio mode** for local integration with Claude Desktop.
 
 Add to your Claude Desktop configuration file:
 
@@ -93,19 +95,18 @@ Add to your Claude Desktop configuration file:
 {
   "mcpServers": {
     "duckduckgo-search": {
-      "command": "python",
+      "command": "/path/to/duckduckgo-mcp/venv/bin/python",
       "args": [
-        "-m",
-        "src.main"
-      ],
-      "cwd": "/path/to/duckduckgo-mcp",
-      "env": {}
+        "/path/to/duckduckgo-mcp/run_mcp_server.py"
+      ]
     }
   }
 }
 ```
 
-### Deploy to Apify
+### Deploy to Apify (Remote HTTP Mode)
+
+The Actor can run in **HTTP mode** for remote access via Apify's web infrastructure.
 
 1. Create an account at [Apify](https://apify.com)
 2. Install Apify CLI:
@@ -123,10 +124,85 @@ apify login
 apify push
 ```
 
+5. Configure the Actor with HTTP mode in Apify Console:
+```json
+{
+  "mode": "http",
+  "port": 3000,
+  "searchRateLimit": 30,
+  "fetchRateLimit": 20,
+  "maxResultsDefault": 10,
+  "safeModeDefault": true,
+  "enableLogging": true
+}
+```
+
+6. The Actor will run as a web server at:
+```
+https://YOUR_ACTOR_ID.apify.actor/
+```
+
+### Using the HTTP API
+
+Once deployed in HTTP mode, you can interact with the MCP server via HTTP endpoints:
+
+**Health Check:**
+```bash
+curl https://YOUR_ACTOR_ID.apify.actor/health
+```
+
+**List Available Tools:**
+```bash
+curl -X POST https://YOUR_ACTOR_ID.apify.actor/mcp/message \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list"
+  }'
+```
+
+**Perform Web Search:**
+```bash
+curl -X POST https://YOUR_ACTOR_ID.apify.actor/mcp/message \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/call",
+    "params": {
+      "name": "web_search",
+      "arguments": {
+        "query": "Python async programming",
+        "max_results": 5
+      }
+    }
+  }'
+```
+
+## Two Modes of Operation
+
+This MCP server supports **two modes** to fit different use cases:
+
+### 📍 stdio Mode (Local Integration)
+- **Best for:** Claude Desktop, local MCP clients
+- **Transport:** stdin/stdout (process-based)
+- **Deployment:** Runs locally on your machine
+- **Use case:** Personal use, development, testing
+- **Configuration:** Set `mode: "stdio"`
+
+### 🌐 HTTP Mode (Remote Access)
+- **Best for:** Apify deployment, remote access, API integration
+- **Transport:** HTTP/JSON-RPC
+- **Deployment:** Runs as a web server (Apify Actor)
+- **Use case:** Shared access, production deployment, integrations
+- **Configuration:** Set `mode: "http"` with `port: 3000`
+
 ## Configuration
 
 Configure the Actor through the input schema:
 
+**For stdio mode (local):**
 ```json
 {
   "mode": "stdio",
@@ -134,9 +210,21 @@ Configure the Actor through the input schema:
   "fetchRateLimit": 20,
   "maxResultsDefault": 10,
   "safeModeDefault": true,
-  "enableLogging": true,
-  "enableCaching": false,
-  "cacheExpiryMinutes": 60
+  "enableLogging": true
+}
+```
+
+**For HTTP mode (remote/Apify):**
+```json
+{
+  "mode": "http",
+  "host": "0.0.0.0",
+  "port": 3000,
+  "searchRateLimit": 30,
+  "fetchRateLimit": 20,
+  "maxResultsDefault": 10,
+  "safeModeDefault": true,
+  "enableLogging": true
 }
 ```
 
