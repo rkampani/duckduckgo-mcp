@@ -232,16 +232,93 @@ The server provides comprehensive error handling:
 - Perform automated research
 - Analyze search trends
 
-## Privacy & Terms
+## ⚠️ LEGAL DISCLAIMER & TERMS OF USE
 
-This Actor:
-- Uses DuckDuckGo's privacy-focused search engine
-- Does not track user queries
-- Is for educational and research purposes
-- Should respect DuckDuckGo's Terms of Service
-- Is not affiliated with DuckDuckGo
+**READ THIS CAREFULLY BEFORE USING THIS SOFTWARE**
 
-**Important**: This tool is not intended for commercial use that violates DuckDuckGo's Terms of Service.
+### Critical Legal Notice
+
+This software uses the unofficial `duckduckgo-search` Python library (ddgs) which scrapes DuckDuckGo's search results. **This activity violates DuckDuckGo's Terms of Service.**
+
+### Terms of Service Violations
+
+According to DuckDuckGo's Terms of Service:
+- ❌ Automated access to search results is **prohibited**
+- ❌ Scraping search data is **not permitted**
+- ❌ Commercial use of scraped data **violates their ToS**
+- ✅ DuckDuckGo offers official APIs, but they cost $500+/month for commercial use
+
+### Official Position
+
+- **NOT affiliated with DuckDuckGo** - This is an unofficial, third-party tool
+- **NOT endorsed by DuckDuckGo** - They do not support or approve this usage
+- **NOT for production use** - This violates their acceptable use policy
+
+### Permitted Use
+
+This software is provided **STRICTLY** for:
+- ✅ Educational purposes and learning
+- ✅ Personal research and experimentation
+- ✅ Non-commercial academic study
+- ✅ Local development and testing
+
+### Prohibited Use
+
+**DO NOT USE THIS SOFTWARE FOR:**
+- ❌ Commercial applications or services
+- ❌ Production deployments
+- ❌ Paid products or services
+- ❌ High-volume automated searches
+- ❌ Any purpose that generates revenue
+- ❌ Public-facing applications
+- ❌ Business intelligence or data harvesting
+
+### Legal Risks & Liability
+
+By using this software, you acknowledge and accept that:
+
+1. **You assume all legal risks** - The author bears no responsibility for your use
+2. **You may face legal action** - DuckDuckGo may pursue violations of their ToS
+3. **Your IP may be blocked** - Excessive usage will result in rate limiting or bans
+4. **No warranty provided** - This software is provided "AS IS" without guarantees
+5. **You are responsible** - Compliance with all applicable laws is your responsibility
+
+### Privacy Notice
+
+While this software:
+- ✅ Does not track or store your queries locally
+- ✅ Does not send data to third parties
+- ✅ Uses DuckDuckGo's privacy-focused search engine
+
+**Important**: DuckDuckGo will see your searches originating from your IP address, and their privacy policy applies to the search activity itself.
+
+### Recommended Legal Alternatives
+
+For commercial or production use, consider these legal alternatives:
+- [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) - Free tier: 1,000 queries/month
+- [Google Custom Search API](https://developers.google.com/custom-search) - Free tier: 100 queries/day
+- [Brave Search API](https://brave.com/search/api/) - Paid plans available
+- [SerpAPI](https://serpapi.com/) - Legal scraping service with proper licensing
+- [DuckDuckGo Official API](https://duckduckgo.com/api) - $500+/month for commercial search
+
+### Author's Disclaimer
+
+The author and contributors:
+- Do not encourage violation of Terms of Service
+- Provide this code for educational purposes only
+- Assume no liability for misuse
+- Recommend using legal alternatives for any commercial application
+
+### License
+
+This software is released under the MIT License, which means:
+- ✅ You can use, modify, and distribute the code
+- ❌ The license does NOT grant you rights to violate DuckDuckGo's ToS
+- ❌ The MIT License provides NO warranty or liability coverage
+
+**USE AT YOUR OWN RISK**
+
+If you need commercial search capabilities, please use official, paid APIs from search providers.
 
 ## Contributing
 

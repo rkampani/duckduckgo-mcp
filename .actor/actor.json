@@ -4,6 +4,8 @@
   "title": "DuckDuckGo MCP Server",
   "description": "Model Context Protocol server enabling AI assistants to perform real-time web searches using DuckDuckGo's privacy-focused search engine",
   "version": "1.0.0",
+  "isPublic": false,
+  "categories": ["EDUCATIONAL"],
   "meta": {
     "templateId": "python-start"
   },
