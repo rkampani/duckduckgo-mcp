@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ## ⚠️ Legal Notice
 
-This software uses an unofficial DuckDuckGo scraping library which **violates DuckDuckGo's Terms of Service**.
+This software uses an DuckDuckGo scraping library.
 
 **For Educational Use Only:**
 - ✅ Personal learning and research
