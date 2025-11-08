@@ -33,52 +33,6 @@ pip install -r requirements.txt
 }
 ```
 
-### Deploy to Apify (HTTP Mode)
-
-1. Install Apify CLI and login:
-```bash
-npm install -g apify-cli
-apify login
-```
-
-2. Deploy:
-```bash
-apify push
-```
-
-3. Configure in Apify Console:
-```json
-{
-  "mode": "http",
-  "port": 3000,
-  "searchRateLimit": 30
-}
-```
-
-4. Access at: `https://YOUR_ACTOR_ID.apify.actor/`
-
-## API Usage
-
-**Health Check:**
-```bash
-curl https://YOUR_ACTOR_ID.apify.actor/health
-```
-
-**Search:**
-```bash
-curl -X POST https://YOUR_ACTOR_ID.apify.actor/mcp/message \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "tools/call",
-    "params": {
-      "name": "web_search",
-      "arguments": {"query": "Python async", "max_results": 5}
-    }
-  }'
-```
-
 ## Configuration
 
 | Option | Default | Description |
