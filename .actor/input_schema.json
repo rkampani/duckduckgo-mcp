@@ -1,0 +1,77 @@
+{
+  "title": "DuckDuckGo MCP Server Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "mode": {
+      "title": "Server Mode",
+      "type": "string",
+      "description": "Mode to run the MCP server: stdio for local integration, http for web deployment",
+      "enum": ["stdio", "http"],
+      "default": "stdio",
+      "editor": "select"
+    },
+    "port": {
+      "title": "HTTP Port",
+      "type": "integer",
+      "description": "Port number for HTTP mode (only used when mode is 'http')",
+      "default": 3000,
+      "minimum": 1024,
+      "maximum": 65535
+    },
+    "enableCaching": {
+      "title": "Enable Result Caching",
+      "type": "boolean",
+      "description": "Cache search results to improve performance and reduce API calls",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "cacheExpiryMinutes": {
+      "title": "Cache Expiry (Minutes)",
+      "type": "integer",
+      "description": "How long to cache results before expiring (only used when caching is enabled)",
+      "default": 60,
+      "minimum": 1,
+      "maximum": 1440
+    },
+    "maxResultsDefault": {
+      "title": "Default Max Results",
+      "type": "integer",
+      "description": "Default number of search results to return if not specified",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 50
+    },
+    "searchRateLimit": {
+      "title": "Search Rate Limit (per minute)",
+      "type": "integer",
+      "description": "Maximum number of search requests allowed per minute",
+      "default": 30,
+      "minimum": 1,
+      "maximum": 100
+    },
+    "fetchRateLimit": {
+      "title": "Fetch Rate Limit (per minute)",
+      "type": "integer",
+      "description": "Maximum number of content fetch requests allowed per minute",
+      "default": 20,
+      "minimum": 1,
+      "maximum": 100
+    },
+    "enableLogging": {
+      "title": "Enable Detailed Logging",
+      "type": "boolean",
+      "description": "Enable detailed logging for debugging purposes",
+      "default": true,
+      "editor": "checkbox"
+    },
+    "safeModeDefault": {
+      "title": "Safe Search Default",
+      "type": "boolean",
+      "description": "Enable safe search by default for all queries",
+      "default": true,
+      "editor": "checkbox"
+    }
+  },
+  "required": []
+}
