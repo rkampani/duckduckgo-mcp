@@ -54,3 +54,16 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+
+# Editor/Tools
+.cursor/
+.claude/
+
+# Node/NPM (Apify CLI dependencies)
+node_modules/
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.npm-lock.json
+.npm-cache

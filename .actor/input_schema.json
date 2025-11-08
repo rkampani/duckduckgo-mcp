@@ -6,9 +6,9 @@
     "mode": {
       "title": "Server Mode",
       "type": "string",
-      "description": "Mode to run the MCP server: stdio for local integration, http for web deployment",
+      "description": "Mode to run the MCP server: stdio for local integration, http for remote access",
       "enum": ["stdio", "http"],
-      "default": "stdio",
+      "default": "http",
       "editor": "select"
     },
     "port": {
@@ -17,22 +17,15 @@
       "description": "Port number for HTTP mode (only used when mode is 'http')",
       "default": 3000,
       "minimum": 1024,
-      "maximum": 65535
+      "maximum": 65535,
+      "editor": "number"
     },
-    "enableCaching": {
-      "title": "Enable Result Caching",
-      "type": "boolean",
-      "description": "Cache search results to improve performance and reduce API calls",
-      "default": false,
-      "editor": "checkbox"
-    },
-    "cacheExpiryMinutes": {
-      "title": "Cache Expiry (Minutes)",
-      "type": "integer",
-      "description": "How long to cache results before expiring (only used when caching is enabled)",
-      "default": 60,
-      "minimum": 1,
-      "maximum": 1440
+    "host": {
+      "title": "HTTP Host",
+      "type": "string",
+      "description": "Host to bind HTTP server (use 0.0.0.0 for all interfaces)",
+      "default": "0.0.0.0",
+      "editor": "textfield"
     },
     "maxResultsDefault": {
       "title": "Default Max Results",
@@ -40,7 +33,8 @@
       "description": "Default number of search results to return if not specified",
       "default": 10,
       "minimum": 1,
-      "maximum": 50
+      "maximum": 50,
+      "editor": "number"
     },
     "searchRateLimit": {
       "title": "Search Rate Limit (per minute)",
@@ -48,7 +42,8 @@
       "description": "Maximum number of search requests allowed per minute",
       "default": 30,
       "minimum": 1,
-      "maximum": 100
+      "maximum": 100,
+      "editor": "number"
     },
     "fetchRateLimit": {
       "title": "Fetch Rate Limit (per minute)",
@@ -56,7 +51,8 @@
       "description": "Maximum number of content fetch requests allowed per minute",
       "default": 20,
       "minimum": 1,
-      "maximum": 100
+      "maximum": 100,
+      "editor": "number"
     },
     "enableLogging": {
       "title": "Enable Detailed Logging",

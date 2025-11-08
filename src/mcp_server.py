@@ -1,6 +1,7 @@
 """Model Context Protocol server implementation for DuckDuckGo search."""
 
 import asyncio
+import json
 from typing import Any, Dict, Optional
 
 import structlog
@@ -239,12 +240,119 @@ class DuckDuckGoMCPServer:
         finally:
             await self.cleanup()
 
+    async def run_http(self, host: str = "0.0.0.0", port: int = 3000) -> None:
+        """Run the MCP server using HTTP/SSE transport."""
+        try:
+            from fastapi import FastAPI, Request
+            from fastapi.responses import StreamingResponse, JSONResponse
+            from sse_starlette.sse import EventSourceResponse
+            import uvicorn
+
+            app = FastAPI(title="DuckDuckGo MCP Server")
+
+            @app.get("/")
+            async def root():
+                """Health check endpoint."""
+                return {
+                    "service": "DuckDuckGo MCP Server",
+                    "status": "running",
+                    "mode": "http",
+                    "tools": ["web_search", "fetch_page_content", "suggest_related_searches"]
+                }
+
+            @app.get("/health")
+            async def health():
+                """Health check for Apify."""
+                return {"status": "ok"}
+
+            @app.post("/mcp/message")
+            async def handle_message(request: Request):
+                """Handle MCP JSON-RPC messages."""
+                try:
+                    message = await request.json()
+
+                    # Handle different MCP methods
+                    method = message.get("method")
+
+                    if method == "tools/list":
+                        # List available tools
+                        tools_list = await self.server._list_tools_handlers[0]()
+                        return JSONResponse({
+                            "jsonrpc": "2.0",
+                            "id": message.get("id"),
+                            "result": {
+                                "tools": [
+                                    {
+                                        "name": tool.name,
+                                        "description": tool.description,
+                                        "inputSchema": tool.inputSchema
+                                    }
+                                    for tool in tools_list
+                                ]
+                            }
+                        })
+
+                    elif method == "tools/call":
+                        # Call a tool
+                        params = message.get("params", {})
+                        tool_name = params.get("name")
+                        arguments = params.get("arguments", {})
+
+                        # Call the tool handler
+                        result = await self.server._call_tool_handlers[0](tool_name, arguments)
+
+                        return JSONResponse({
+                            "jsonrpc": "2.0",
+                            "id": message.get("id"),
+                            "result": {
+                                "content": [
+                                    {"type": content.type, "text": content.text}
+                                    for content in result
+                                ]
+                            }
+                        })
+
+                    else:
+                        return JSONResponse({
+                            "jsonrpc": "2.0",
+                            "id": message.get("id"),
+                            "error": {
+                                "code": -32601,
+                                "message": f"Method not found: {method}"
+                            }
+                        }, status_code=400)
+
+                except Exception as e:
+                    logger.error("Error handling MCP message", error=str(e))
+                    return JSONResponse({
+                        "jsonrpc": "2.0",
+                        "id": message.get("id"),
+                        "error": {
+                            "code": -32603,
+                            "message": f"Internal error: {str(e)}"
+                        }
+                    }, status_code=500)
+
+            logger.warning(f"Starting HTTP MCP server on {host}:{port}")
+            config = uvicorn.Config(app, host=host, port=port, log_level="warning")
+            server = uvicorn.Server(config)
+            await server.serve()
+
+        except Exception as e:
+            logger.error("HTTP MCP server error", error=str(e))
+            raise
+        finally:
+            await self.cleanup()
+
     async def cleanup(self) -> None:
         """Clean up resources."""
         await self.search_handler.cleanup()
 
 
 async def run_server(
+    mode: str = "stdio",
+    host: str = "0.0.0.0",
+    port: int = 3000,
     search_rate_limit: int = 30,
     fetch_rate_limit: int = 20,
     max_results_default: int = 10,
@@ -254,6 +362,9 @@ async def run_server(
     Run the MCP server.
 
     Args:
+        mode: Server mode - "stdio" for local, "http" for remote
+        host: Host to bind HTTP server (only for http mode)
+        port: Port for HTTP server (only for http mode)
         search_rate_limit: Maximum search requests per minute
         fetch_rate_limit: Maximum fetch requests per minute
         max_results_default: Default number of results
@@ -265,4 +376,10 @@ async def run_server(
         max_results_default=max_results_default,
         safe_mode_default=safe_mode_default,
     )
-    await server.run_stdio()
+
+    if mode == "stdio":
+        await server.run_stdio()
+    elif mode == "http":
+        await server.run_http(host=host, port=port)
+    else:
+        raise ValueError(f"Invalid mode: {mode}. Must be 'stdio' or 'http'")

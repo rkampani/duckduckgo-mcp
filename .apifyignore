@@ -1,0 +1,38 @@
+# Claude Code configuration (local development only)
+.claude/
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node modules (apify-cli only)
+node_modules/
+package.json
+package-lock.json
+
+# Git repository
+.git/
+.gitignore
+
+# Local testing
+tests/
+pytest.ini
+storage/
+
+# Local MCP server entry point (not needed on Apify)
+run_mcp_server.py
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
