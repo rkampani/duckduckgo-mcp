@@ -43,12 +43,6 @@ class SearchHandler:
         # Initialize result formatter
         self.formatter = ResultFormatter()
 
-        logger.info(
-            "SearchHandler initialized",
-            search_rate_limit=search_rate_limit,
-            fetch_rate_limit=fetch_rate_limit,
-        )
-
     async def web_search(
         self,
         query: str,
@@ -78,14 +72,6 @@ class SearchHandler:
         max_results = max_results or self.max_results_default
         safe_search = safe_search if safe_search is not None else self.safe_mode_default
 
-        logger.info(
-            "Performing web search",
-            query=query,
-            max_results=max_results,
-            region=region,
-            safe_search=safe_search,
-        )
-
         try:
             # Run sync DDGS in thread pool
             results = await asyncio.to_thread(
@@ -96,8 +82,6 @@ class SearchHandler:
             for result in results:
                 if "url" in result:
                     result["url"] = self.content_parser.clean_url(result["url"])
-
-            logger.info("Web search completed", query=query, result_count=len(results))
 
             return {
                 "success": True,
@@ -160,12 +144,8 @@ class SearchHandler:
         # Apply rate limiting
         await self.fetch_limiter.acquire()
 
-        logger.info("Fetching page content", url=url)
-
         try:
             content_data = await self.content_parser.fetch_content(url)
-
-            logger.info("Page content fetched successfully", url=url)
 
             return {
                 "success": True,
@@ -198,16 +178,10 @@ class SearchHandler:
         # Apply rate limiting
         await self.search_limiter.acquire()
 
-        logger.info("Getting search suggestions", query=query)
-
         try:
             # Run sync DDGS in thread pool
             suggestions = await asyncio.to_thread(
                 self._suggestions_sync, query, max_suggestions
-            )
-
-            logger.info(
-                "Search suggestions retrieved", query=query, count=len(suggestions)
             )
 
             return {
@@ -257,4 +231,3 @@ class SearchHandler:
     async def cleanup(self) -> None:
         """Clean up resources."""
         await self.content_parser.close()
-        logger.info("SearchHandler cleanup completed")
